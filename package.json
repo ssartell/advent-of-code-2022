@@ -1,0 +1,32 @@
+{
+  "name": "advent-of-code-2022",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha ./day*/*.test.js",
+    "plop": "plop --plopfile ./plopfile.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssartell/advent-of-code-2022.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ssartell/advent-of-code-2022/issues"
+  },
+  "homepage": "https://github.com/ssartell/advent-of-code-2022#readme",
+  "dependencies": {
+    "ansi": "^0.3.1",
+    "compute-lcm": "^1.1.2",
+    "esm": "^3.2.25",
+    "js-combinatorics": "^1.5.7",
+    "mnemonist": "^0.38.5",
+    "mocha": "^8.4.0",
+    "node-stopwatch": "0.0.1",
+    "plop": "^2.7.6",
+    "ramda": "^0.28.0"
+  }
+}
