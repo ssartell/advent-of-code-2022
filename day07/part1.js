@@ -1,47 +1,51 @@
 import * as R from 'ramda';
+import Stack from 'mnemonist/stack.js';
 
-const debug = x => {
-  debugger;
-  return x;
-};
-
-const readOut = R.pipe(R.match(/(\S*) (\S*)/), R.tail);
-const toOut = input => {
-  let outs = readOut(input);
-  let isDir = outs[0] === 'dir';
-  return {
-    type: isDir ? 'dir' : 'file',
-    size: parseInt(outs[0]),
-    name: outs[1]
-  };
-}
-const readCmdArgs = R.pipe(R.match(/\$ (\S*)\s?(\S*)?/), R.tail);
-const toCmd = input => {
-  var args = readCmdArgs(R.head(input));
-  return {
-    cmd: args[0],
-    arg: args[1],
-    out: R.map(toOut, R.tail(input))
-  }
-}
-const parseInput = R.pipe(R.split('\n'), R.groupWith((_, x) => !R.startsWith('$', x)), R.map(toCmd));
+const lineRegex = /\$? ?(\S+) ?(\S+)?/
+const parseInput = R.pipe(R.split('\n'), R.map(R.pipe(R.match(lineRegex), R.tail)));
 
 const buildFileSystem = lines => {
-  let cwd = {
-    name: 'root',
-    dirs: [
-      {
-        type: 'dir',
-        name: '/'
-      }
-    ]
-  };
+  let stack = new Stack();
+  let cwd = new Map();
+  cwd.name = '/';
+  let home = cwd;
 
-  for(let line of lines) {
-    if (line.cmd === 'cd') {
-      if ()
+  for(let [arg1, arg2] of R.tail(lines)) {
+    if (arg1 === 'cd') {
+      if (arg2 === '..') {
+        cwd = stack.pop();
+      } else {
+        stack.push(cwd);
+        cwd = cwd.get(arg2);
+      }
+    } else if (arg1 === 'ls') {
+    } else if (arg1 === 'dir') {
+      var dir = new Map();
+      dir.name = arg2;
+      cwd.set(arg2, dir);
+    } else {
+      cwd.set(arg2, parseInt(arg1));
     }
   }
+
+  return home;
+};
+
+const getDirs = fs => {
+  let subDirs = R.filter(x => x instanceof Map, [...fs.values()]);
+  return R.append(fs, R.flatten(R.map(x => getDirs(x), subDirs)));
+};
+
+const getSize = dir => {
+  let size = 0;
+  for(let [key, value] of dir) {
+    if (value instanceof Map) {
+      size += getSize(value);
+    } else {
+      size += value;
+    }
+  }
+  return size;
 }
 
-export default R.pipe(parseInput, debug); 
+export default R.pipe(parseInput, buildFileSystem, getDirs, R.map(getSize), R.filter(x => x <= 100000), R.sum); 
