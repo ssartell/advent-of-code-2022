@@ -1,5 +1,16 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { add, rotate90 } from './vec2.js';
+
+export const createEmptyGrid = (width, height, initVal = 0) => {
+  let grid = [];
+  for(let y = 0; y < height; y++) {
+    grid[y] = [];
+    for(let x = 0; x < width; x++) {
+      grid[y][x] = initVal;
+    }
+  }
+  return grid;
+}
 
 export const gridPositions = grid => {
   const positions = [];
