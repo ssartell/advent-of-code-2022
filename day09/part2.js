@@ -2,10 +2,10 @@ import * as R from 'ramda';
 import { add, sub, toString, clamp, chebyshev } from '../utils/vec2.js'
 
 const dirs = {
-  R: {x: 1, y: 0},
-  L: {x: -1, y: 0},
-  U: {x: 0, y: 1},
-  D: {x: 0, y: -1}
+  R: {x:  1, y:  0},
+  L: {x: -1, y:  0},
+  U: {x:  0, y:  1},
+  D: {x:  0, y: -1}
 };
 
 const parseInput = R.pipe(R.split('\n'), R.map(R.pipe(R.split(' '), R.zipObj(['dir', 'steps']), R.evolve({ steps: parseInt }))));
@@ -31,6 +31,7 @@ const update = ({ segments, history }, motion) => {
   
   return { segments, history };
 };
+
 const initRope = () => R.repeat(0, 10).map(x => ({x: 0, y: 0}));
 
 export default R.pipe(parseInput, R.reduce(update, {segments: initRope(), history: new Set()}), x => x.history.size);

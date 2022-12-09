@@ -2,10 +2,10 @@ import * as R from 'ramda';
 import { add, length, sub, toString, clamp, chebyshev } from '../utils/vec2.js'
 
 const dirs = {
-  R: {x: 1, y: 0},
-  L: {x: -1, y: 0},
-  U: {x: 0, y: 1},
-  D: {x: 0, y: -1}
+  R: {x:  1, y:  0},
+  L: {x: -1, y:  0},
+  U: {x:  0, y:  1},
+  D: {x:  0, y: -1}
 };
 
 const parseInput = R.pipe(R.split('\n'), R.map(R.pipe(R.split(' '), R.zipObj(['dir', 'steps']), R.evolve({ steps: parseInt }))));
