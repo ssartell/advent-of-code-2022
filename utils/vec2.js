@@ -7,6 +7,7 @@ export const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;
 export const equals = (v1, v2) => v1.x === v2.x && v1.y === v2.y;
 export const length = (v) => Math.sqrt(dot(v, v));
 export const manhattan = (v) => Math.abs(v.x) + Math.abs(v.y);
+export const chebyshev = (v) => Math.max(Math.abs(v.x), Math.abs(v.y));
 export const normalize = (v) => scale(v, 1 / length(v));
 export const abs = (v) => ({x: Math.abs(v.x), y: Math.abs(v.y)});
 export const min = (v1, v2) => ({x: Math.min(v1.x, v2.x), y: Math.min(v1.y, v2.y)});
