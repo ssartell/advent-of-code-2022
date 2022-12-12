@@ -7,7 +7,7 @@ const toElevation = x => 'SabcdefghijklmnopqrstuvwxyzE'.indexOf(x);
 const parseInput = R.pipe(R.split('\n'), R.map(R.pipe(R.split(''), R.map(toElevation))));
 
 const findPath = grid => {
-  let startPos = { ...indexOf(grid, toElevation('S')), cost: 0, elevation: 's' };
+  let startPos = { ...indexOf(grid, toElevation('S')), cost: 0, elevation: 'S' };
   setValue(grid, startPos, toElevation('a'));
   let endPos = indexOf(grid, toElevation('E'));
   setValue(grid, endPos, toElevation('z'));
