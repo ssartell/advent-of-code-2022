@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import m from 'mnemonist';
 let { Heap, Queue, Stack } = m;
 
@@ -34,6 +34,7 @@ export const bfs = (start, isEnd, getNeighbors, getKey = x => x) => {
           notVisited.enqueue(neighbor);
       }
   }
+  return null;
 };
 
 export const dfs = (start, isEnd, getNeighbors, getKey = x => x) => {
@@ -50,6 +51,7 @@ export const dfs = (start, isEnd, getNeighbors, getKey = x => x) => {
           notVisited.push(neighbor);
       }
   }
+  return null;
 };
 
 export const dijkstra = (start, isEnd, getNeighbors, getCost, getKey = x => x) => {
@@ -66,4 +68,5 @@ export const dijkstra = (start, isEnd, getNeighbors, getCost, getKey = x => x) =
           notVisited.push(neighbor);
       }
   }
+  return null;
 };

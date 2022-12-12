@@ -82,3 +82,12 @@ export const getSize = grid => ({
   x: grid[0].length,
   y: grid.length
 });
+
+export const indexOf = (grid, value) => {
+  for(let pos of gridPositions(grid)) {
+    if (getValue(grid, pos) === value) {
+      return pos;
+    }
+  }
+  return null;
+}

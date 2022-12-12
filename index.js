@@ -1,7 +1,7 @@
 import run from './scaffolding.js';
 
 (async () => {
-    await run(11, 2);
+    await run(12, 1);
 
     process.exit();
 })();
