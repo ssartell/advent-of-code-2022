@@ -1,10 +1,5 @@
 import * as R from 'ramda';
 
-const debug = x => { 
-  debugger; 
-  return x; 
-};
-
 const parseInput = R.pipe(R.split('\n\n'), R.pipe(R.map(R.pipe(R.split('\n'), R.map(eval)))));
 
 export const packetComparator = (left, right) => {
