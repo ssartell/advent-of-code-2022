@@ -7,22 +7,10 @@ export const packetComparator = (left, right) => {
     return Math.sign(left - right);
   }
   if (left instanceof Array && right instanceof Array) {
-    let inOrder = 0;
-    for(let [l, r] of R.zip(left, right)) {
-      let comparison = packetComparator(l, r);
-      if (comparison !== 0) {
-        inOrder = comparison;
-        break;
-      }
-    }
+    let subComparison = R.map(R.apply(packetComparator), R.zip(left, right));
+    let inOrder = R.find(x => x !== 0, subComparison) || left.length - right.length;
     if (inOrder !== 0) {
       return inOrder;
-    } else if (inOrder === 0) {
-      if (left.length < right.length) {
-        return -1;
-      } else if (right.length < left.length) {
-        return 1;
-      }
     }
   }
   if (left instanceof Array && typeof right === 'number') {
