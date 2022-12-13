@@ -4,13 +4,7 @@ const parseInput = R.pipe(R.split('\n\n'), R.pipe(R.map(R.pipe(R.split('\n'), R.
 
 export const packetComparator = (left, right) => {
   if (typeof left === 'number' && typeof right === 'number') {
-    if (left < right) {
-      return -1;
-    } else  if (right < left) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return Math.sign(left - right);
   }
   if (left instanceof Array && right instanceof Array) {
     let inOrder = 0;
