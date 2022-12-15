@@ -48,4 +48,4 @@ const pathFind = (push, pop, peek, start, isEnd, getNeighbors, getKey) => {
         }
     }
     return null;
-}
+};

@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { toString, fromString } from './vec3.js';
 import { min, max } from './ramda.js';
 

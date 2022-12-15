@@ -1,6 +1,17 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { add, toString, fromString } from './vec2.js';
 import { min, max } from './ramda.js';
+
+export const getPositions = grid => {
+  let bounds = getBounds(grid);
+  const positions = [];
+  for(let y = bounds.minY; y < bounds.maxY; y++) {
+    for(let x = bounds.minX; y < bounds.maxX; x++) {
+      positions.push({x, y});
+    }
+  }
+  return positions;
+}
 
 export const getNeighbors = R.curry((grid, pos) => {
   const neighbors = [];
@@ -44,4 +55,4 @@ export const getBounds = grid => {
   let minY = min(pos.map(x => x.y));  
   let maxY = max(pos.map(x => x.y));
   return { minX, maxX, minY, maxY };
-}
+};
