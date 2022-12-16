@@ -1,8 +1,6 @@
 import * as R from 'ramda';
-import { gap, hasOverlap, length, union } from '../utils/range.js';
+import { isBelowRange } from '../utils/range.js';
 import { manhattan, sub } from '../utils/vec2.js';
-import m from 'mnemonist';
-let { Queue } = m;
 
 const lineRegex = /Sensor at x=(-?\d*), y=(-?\d*): closest beacon is at x=(-?\d*), y=(-?\d*)/;
 const readLine = R.pipe(R.match(lineRegex), R.tail, R.map(parseInt), ([x1, y1, x2, y2]) => ({ pos: {x: x1, y: y1}, beacon: {x: x2, y: y2} }));
@@ -14,29 +12,16 @@ const getRowRange = R.curry((row, {pos, beacon}) => {
   return leftOver > 0 ? [pos.x - leftOver, pos.x + leftOver] : null;
 });
 
-const mergeRanges = ranges => {
-  let toMerge = Queue.from(ranges);
-  let merged = new Set();
-  while (toMerge.peek()) {
-    let range = toMerge.dequeue();
-    let overlappingRange = R.find(b => hasOverlap(range, b), [...merged]);
-    if (overlappingRange) {
-      toMerge.enqueue(union(range, overlappingRange));
-      merged.delete(overlappingRange);
-    } else {
-      merged.add(range);
-    }
-  }
-  return [...merged];
-};
-
-const getRowRanges = (row, sensors) => R.pipe(R.map(getRowRange(row)), R.filter(x => x !== null), mergeRanges)(sensors);
+const getRowRanges = (row, sensors) => R.pipe(R.map(getRowRange(row)), R.filter(x => x !== null))(sensors);
 
 const findBeacon = sensors => {
   for(let y = 0; y <= 4000000; y++) {
-    let ranges = getRowRanges(y, sensors);
-    if (ranges.length > 1) {
-      return { x: gap(ranges[0], ranges[1])[0], y };
+    let ranges = R.sortBy(x => x[0], getRowRanges(y, sensors));
+    let x = 0;
+    for(let range of ranges) {
+      if (isBelowRange(range, x)) return { x, y };
+      x = R.max(x, range[1] + 1);
+      if (x > 4000000) break;
     }
   }
   return null;
