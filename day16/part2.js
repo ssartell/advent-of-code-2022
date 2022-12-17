@@ -48,9 +48,8 @@ const mostPressure = map => {
     
     return moves;
   };
-  const getCost = x => -x.pressure;
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort().join(',')}`;
-  dijkstra(start, isEnd, getNeighbors, getCost, getKey);
+  bfs(start, isEnd, getNeighbors, getKey);
 
   let max = 0;
   maxs = R.sortBy(x => -x.pressure, maxs);

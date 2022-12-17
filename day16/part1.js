@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { bfs, dijkstra } from '../utils/graph-traversal.js';
+import { bfs } from '../utils/graph-traversal.js';
 
 const maxMins = 30;
 
@@ -45,12 +45,11 @@ const mostPressure = map => {
         };
       })
       .filter(t => t.pressure > x.pressure || t.minute > maxMins);
-    
+
     return moves;
   };
-  const getCost = x => -x.pressure;
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort().join(',')}`;
-  dijkstra(start, isEnd, getNeighbors, getCost, getKey);
+  bfs(start, isEnd, getNeighbors, getKey);
   return max;
 }
 
