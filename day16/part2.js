@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { bfs, dijkstra } from '../utils/graph-traversal.js';
+import { bfs } from '../utils/graph-traversal.js';
 
 const maxMins = 26;
 
