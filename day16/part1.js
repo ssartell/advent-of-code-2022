@@ -24,9 +24,8 @@ const mostPressure = map => {
   }
 
   let max = 0;
-  let count = 0;
   const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set() };
-  const isEnd = x => { count++; max = Math.max(max, x.pressure); return false; };
+  const isEnd = x => { max = Math.max(max, x.pressure); return false; };
   const getNeighbors = x => {
     if (x.minute >= maxMins - 2) return [];
 
@@ -48,8 +47,9 @@ const mostPressure = map => {
     return moves;
   };
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort()}`;
+  
   bfs(start, isEnd, getNeighbors, getKey);
-  console.log(count);
+
   return max;
 }
 
