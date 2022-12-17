@@ -24,32 +24,32 @@ const mostPressure = map => {
   }
 
   let max = 0;
-  const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set(), activePressure: [] };
-  const isEnd = x => { max = Math.max(max, x.pressure); return false; };
+  let count = 0;
+  const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set() };
+  const isEnd = x => { count++; max = Math.max(max, x.pressure); return false; };
   const getNeighbors = x => {
     if (x.minute >= maxMins - 2) return [];
 
     let moves = valveRooms
       .filter(t => !x.activeValves.has(t.name))
       .map(t => {
-        let targetRoom = t;
         let activeValves = new Set(x.activeValves ?? []);
-        activeValves.add(targetRoom.name);
-        let minutes = x.minute + x.shortestPaths.get(t.name) + 1;
+        activeValves.add(t.name);
+        let minutes = x.minute + map.get(x.name).shortestPaths.get(t.name) + 1;
         return {
-          ...targetRoom,
+          name: t.name,
           minute: minutes,
-          pressure: x.pressure + Math.max(0, (maxMins - minutes)) * targetRoom.rate,
-          activePressure: R.append(targetRoom.rate, x.activePressure),
+          pressure: x.pressure + Math.max(0, (maxMins - minutes)) * t.rate,
           activeValves: activeValves
         };
       })
-      .filter(t => t.pressure > x.pressure || t.minute > maxMins - 2);
+      .filter(t => x.pressure < t.pressure || t.minute < maxMins - 2);
 
     return moves;
   };
-  const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort().join(',')}`;
+  const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort()}`;
   bfs(start, isEnd, getNeighbors, getKey);
+  console.log(count);
   return max;
 }
 

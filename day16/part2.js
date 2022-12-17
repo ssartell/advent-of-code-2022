@@ -32,19 +32,17 @@ const mostPressure = map => {
     let moves = valveRooms
       .filter(t => !x.activeValves.has(t.name))
       .map(t => {
-        let targetRoom = t;
         let activeValves = new Set(x.activeValves ?? []);
-        activeValves.add(targetRoom.name);
-        let minutes = x.minute + x.shortestPaths.get(t.name) + 1;
+        activeValves.add(t.name);
+        let minutes = x.minute + map.get(x.name).shortestPaths.get(t.name) + 1;
         return {
-          ...targetRoom,
+          name: t.name,
           minute: minutes,
-          pressure: x.pressure + Math.max(0, (maxMins - minutes)) * targetRoom.rate,
-          activePressure: R.append(targetRoom.rate, x.activePressure),
+          pressure: x.pressure + Math.max(0, (maxMins - minutes)) * t.rate,
           activeValves: activeValves
         };
       })
-      .filter(t => t.pressure > x.pressure || t.minute > maxMins - 2);
+      .filter(t => x.pressure < t.pressure || t.minute < maxMins - 2);
 
     return moves;
   };
@@ -57,14 +55,15 @@ const mostPressure = map => {
     for(let j = i + 1; j < maxs.length; j++) {
       let max1 = maxs[i];
       let max2 = maxs[j];
+      if (max1.pressure + max2.pressure < max) continue;
       if (R.intersection([...max1.activeValves.values()], [...max2.activeValves.values()]).length > 0) continue;
       let newMax = max1.pressure + max2.pressure;
       if (newMax > max) {
         max = newMax;
-        return newMax;
       }
     }
   }
+  return max;
 }
 
 export default R.pipe(parseInput, mostPressure);
