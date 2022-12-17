@@ -8,6 +8,7 @@ const readLine = R.pipe(R.match(lineRegex), R.tail, R.zipObj(['name', 'rate', 't
 const parseInput = R.pipe(R.split('\n'), R.map(readLine), R.reduce((map, x) => { map.set(x.name, x); return map }, new Map()));
 
 const mostPressure = map => {
+  // find shortest time between valves
   let rooms = [...map.values()];
   let valveRooms = rooms.filter(x => x.rate > 0);
   for(let room1 of rooms) {
@@ -23,6 +24,7 @@ const mostPressure = map => {
     }
   }
 
+  // find max pressure
   let max = 0;
   const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set() };
   const isEnd = x => { max = Math.max(max, x.pressure); return false; };
@@ -47,7 +49,7 @@ const mostPressure = map => {
     return moves;
   };
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort()}`;
-  
+
   bfs(start, isEnd, getNeighbors, getKey);
 
   return max;

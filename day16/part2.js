@@ -8,6 +8,7 @@ const readLine = R.pipe(R.match(lineRegex), R.tail, R.zipObj(['name', 'rate', 't
 const parseInput = R.pipe(R.split('\n'), R.map(readLine), R.reduce((map, x) => { map.set(x.name, x); return map }, new Map()));
 
 const mostPressure = map => {
+  // find shortest time between valves
   let rooms = [...map.values()];
   let valveRooms = rooms.filter(x => x.rate > 0);
   for(let room1 of rooms) {
@@ -23,9 +24,10 @@ const mostPressure = map => {
     }
   }
 
-  let maxs = [];
+  // find all routes for single actor
+  let routes = [];
   const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set(), activePressure: [] };
-  const isEnd = x => { maxs.push(x); return false; };
+  const isEnd = x => { routes.push(x); return false; };
   const getNeighbors = x => {
     if (x.minute >= maxMins - 2) return [];
 
@@ -49,12 +51,13 @@ const mostPressure = map => {
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort().join(',')}`;
   bfs(start, isEnd, getNeighbors, getKey);
 
+  // compare pairs of independent routes to find max combined pressure
   let max = 0;
-  maxs = R.sortBy(x => -x.pressure, maxs);
-  for(let i = 0; i < maxs.length; i++) {
-    for(let j = i + 1; j < maxs.length; j++) {
-      let max1 = maxs[i];
-      let max2 = maxs[j];
+  routes = R.sortBy(x => -x.pressure, routes);
+  for(let i = 0; i < routes.length; i++) {
+    for(let j = i + 1; j < routes.length; j++) {
+      let max1 = routes[i];
+      let max2 = routes[j];
       if (max1.pressure + max2.pressure < max) continue;
       if (R.intersection([...max1.activeValves.values()], [...max2.activeValves.values()]).length > 0) continue;
       let newMax = max1.pressure + max2.pressure;
