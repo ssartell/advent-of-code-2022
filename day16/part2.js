@@ -27,7 +27,7 @@ const mostPressure = map => {
   const start = { ...map.get('AA'), minute: 0, pressure: 0, activeValves: new Set(), activePressure: [] };
   const isEnd = x => { maxs.push(x); return false; };
   const getNeighbors = x => {
-    if (x.minute >= maxMins) return [];
+    if (x.minute >= maxMins - 2) return [];
 
     let moves = valveRooms
       .filter(t => !x.activeValves.has(t.name))
@@ -44,8 +44,8 @@ const mostPressure = map => {
           activeValves: activeValves
         };
       })
-      .filter(t => t.pressure > x.pressure || t.minute > maxMins);
-    
+      .filter(t => t.pressure > x.pressure || t.minute > maxMins - 2);
+
     return moves;
   };
   const getKey = x => `${x.name}|${x.pressure}|${[...x.activeValves].sort().join(',')}`;
