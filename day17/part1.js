@@ -3,11 +3,6 @@ import fs from 'fs';
 import { add, sub } from '../utils/vec2.js';
 import { getBounds, getValue, setValue } from '../utils/map-grid.js';
 
-const debug = x => { 
-  debugger; 
-  return x; 
-};
-
 const jetDirs = { '>': { x: 1, y: 0 }, '<': { x: -1, y: 0 }};
 const rockTypesStr = fs.readFileSync('day17/rockTypes.txt', 'utf8');
 

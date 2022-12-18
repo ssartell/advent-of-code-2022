@@ -1,12 +1,7 @@
 import * as R from 'ramda';
 import fs from 'fs';
 import { add, sub } from '../utils/vec2.js';
-import { getBounds, getValue, setValue } from '../utils/map-grid.js';
-
-const debug = x => { 
-  debugger; 
-  return x; 
-};
+import { getValue, setValue } from '../utils/map-grid.js';
 
 const jetDirs = { '>': { x: 1, y: 0 }, '<': { x: -1, y: 0 }};
 const rockTypesStr = fs.readFileSync('day17/rockTypes.txt', 'utf8');
@@ -35,20 +30,6 @@ const comeToRest = (cave, rock, pos) => {
       setValue(cave, add(pos, {x, y}), '#')
     }
   }
-};
-
-const print = cave => {
-  let str = '';
-  const bounds = getBounds(cave);
-  for(let y = bounds.maxY; y >= 0; y--) {
-    str += '|';
-    for(let x = 0; x < 7; x++) {
-      str += getValue(cave, {x,y}) ?? '.';
-    }
-    str += '|\n';
-  }
-  str += '+-------+\n';
-  console.log(str);
 };
 
 const largestCycle = list => {
@@ -84,7 +65,6 @@ const playTetris = R.curry((times, jets) => {
   let lastHeight = 0;
   let heightDiff = 0;
   let diffs = [];
-  let match = [];
   let heights = [];
 
   let j = 0;
@@ -107,9 +87,6 @@ const playTetris = R.curry((times, jets) => {
         pos = sub(pos, gravity);
         comeToRest(cave, rock, pos);
         towerHeight = Math.max(towerHeight, pos.y + rock.height);
-        // print(cave);
-        // console.log(towerHeight);
-        // debugger;
         break;
       }
     }
@@ -119,7 +96,7 @@ const playTetris = R.curry((times, jets) => {
     lastHeight = towerHeight;
     
     let cycleLength = largestCycle(diffs);
-    if (cycleLength > 100) {
+    if (cycleLength > 10) {
       let cycleStart = diffs.length - cycleLength * 2;
       let cycle = diffs.slice(-cycleLength);
       let cycleHeight = R.sum(cycle);
