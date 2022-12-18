@@ -1,29 +1,47 @@
 import * as R from 'ramda';
-import { toString, fromString } from './vec3.js';
+import { add, toString, fromString } from './vec3.js';
 import { min, max } from './ramda.js';
 
-// export const getNeighbors = R.curry((grid, pos) => {
-//   const neighbors = [];
-//   for(let y = -1; y <= 1; y++) {
-//     for(let x = -1; x <= 1; x++) {
-//       if(x === 0 && y === 0) continue;
-//       const neighbor = add(pos, {x, y});
-//       neighbors.push(neighbor);
-//     }
-//   }
-//   return neighbors;
-// });
+export const getNeighbors = pos => {
+  const neighbors = [];
+  for(let z = -1; z <= 1; z++) {
+    for(let y = -1; y <= 1; y++) {
+      for(let x = -1; x <= 1; x++) {
+        if(x === 0 && y === 0 && z === 0) continue;
+        const neighbor = add(pos, {x, y, z});
+        neighbors.push(neighbor);
+      }
+    }
+  }  
+  return neighbors;
+};
 
-// export const getNeighborsAndSelf = R.curry((grid, pos) => {
-//   const neighbors = [];
-//   for(let y = -1; y <= 1; y++) {
-//     for(let x = -1; x <= 1; x++) {
-//       const neighbor = add(pos, {x, y});
-//       neighbors.push(neighbor);
-//     }
-//   }
-//   return neighbors;
-// });
+export const getNeighborsAndSelf = pos => {
+  const neighbors = [];
+  for(let z = -1; z <= 1; z++) {
+    for(let y = -1; y <= 1; y++) {
+      for(let x = -1; x <= 1; x++) {
+        const neighbor = add(pos, {x, y, z});
+        neighbors.push(neighbor);
+      }
+    }
+  }  
+  return neighbors;
+};
+
+export const getCardinalNeighbors = pos => {
+  const neighbors = [];
+  for(let z = -1; z <= 1; z++) {
+    for(let y = -1; y <= 1; y++) {
+      for(let x = -1; x <= 1; x++) {
+        if(Math.abs(x) + Math.abs(y) + Math.abs(z) !== 1) continue;
+        const neighbor = add(pos, {x, y, z});
+        neighbors.push(neighbor);
+      }
+    }
+  }  
+  return neighbors;
+};
 
 export const getValue = R.curry((grid, pos, defaultValue = () => undefined) => {
   const key = toString(pos);
@@ -50,4 +68,10 @@ export const getBounds = grid => {
   let minZ = min(pos.map(x => x.z));
   let maxZ = max(pos.map(x => x.z));
   return { minX, maxX, minY, maxY, minZ, maxZ };
-}
+};
+
+export const isInBounds = R.curry((bounds, pos) => {
+  return bounds.minX <= pos.x && pos.x <= bounds.maxX
+    && bounds.minY <= pos.y && pos.y <= bounds.maxY
+    && bounds.minZ <= pos.z && pos.z <= bounds.maxZ;
+});
