@@ -75,18 +75,6 @@ const findQuantityLevel = R.curry((time, blueprint) => {
 
     return next;
   };
-  const g = x => 0;
-  const h = ({ minute, materials, robots }) => {
-    for(let i = minute; i < time; i++) {
-      if (canBuild(materials, blueprint.robots[3])) {
-        materials = subtractCosts(materials, blueprint.robots[3]);
-        robots = R.adjust(3, x => x + 1, robots);
-      }
-      materials = updateMaterials(materials, robots);
-    }
-    materials = updateMaterials(materials, robots);
-    return -materials[3];
-  }
   const getKey = x => {
     return `${x.minute}|${x.robots.join(',')}|${x.materials.join(',')}`
   };
