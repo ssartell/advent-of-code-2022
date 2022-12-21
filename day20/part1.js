@@ -7,21 +7,85 @@ const debug = x => {
 
 const parseInput = R.pipe(R.split('\n'), R.map(parseInt));
 
-const mod = (n, m) => ((n % m) + m) % m;
-const mix = list => {
-  let indices = R.range(0, list.length);
-  for(let k = 0; k <= list.length; k++) {
-    let i = indices[k];
-    let j = mod(i + list[i], list.length);
-    let temp = list[j];
-    list[j] = list[i];
-    list[i] = temp;
-    temp = indices[j];
-    indices[j] = indices[i];
-    indices[i] = temp;
-    debugger;
+const toLinkedList = list => {
+  const head = { value: list[0] };
+  const linkedList = [head];
+  for(let i = 1; i < list.length; i++) {
+    let node = { value: list[i], prev: linkedList[i - 1] };
+    linkedList.push(node);
+    linkedList[i - 1].next = node;
   }
-  return list;
-}
+  head.prev = linkedList[list.length - 1];
+  linkedList[list.length - 1].next = head;
+  return linkedList;
+};
 
-export default R.pipe(parseInput, mix, debug);
+const insertNode = (newNode, prevNode) => {
+  let nextNode = prevNode.next;
+  newNode.prev = prevNode;
+  newNode.next = nextNode;
+  prevNode.next = newNode;
+  nextNode.prev = newNode;
+};
+const removeNode = node => {
+  let prev = node.prev;
+  let next = node.next;
+  prev.next = next;
+  next.prev = prev;
+};
+const fastForward = (pointer, n) => {
+  for(let i = 0; i < n; i++) {
+    pointer = pointer.next;
+  }
+  return pointer;
+};
+
+const print = (node, n) => {
+  let values = []
+  for(let i = 0; i < n; i++) {
+    values.push(node.value);
+    node = node.next;
+  }
+  console.log(values.join(', '));
+};
+
+const mix = list => {
+  let zeroNode = null;
+  for(let node of list) {
+    removeNode(node);
+
+    if (node.value === 0) {
+      zeroNode = node;
+    }
+
+    let pointer = node.prev;
+    let dir = Math.sign(node.value);
+    let mag = Math.abs(node.value);
+    for(let i = 0; i < mag; i++) {
+      if (dir < 0) {
+        pointer = pointer.prev;
+      } else {
+        pointer = pointer.next;
+      }
+    }
+
+    insertNode(node, pointer);
+    // console.log(node.value);
+    // print(pointer, list.length);
+  }
+  // print(zeroNode, list.length);
+  return zeroNode;
+};
+
+const getCoords = zeroNode => {
+  let coords = [];
+  let pointer = fastForward(zeroNode, 1000);
+  coords.push(pointer.value);
+  pointer = fastForward(pointer, 1000);
+  coords.push(pointer.value);
+  pointer = fastForward(pointer, 1000);
+  coords.push(pointer.value);
+  return coords;
+};
+
+export default R.pipe(parseInput, toLinkedList, mix, getCoords, R.sum);
