@@ -35,7 +35,7 @@ const evalMonkey = R.curry((key, map, x) => {
   }
 });
 
-const findRoot = map => {
+const whittakerMethod = map => {
   let x = 1;
   for(let i = 0; i < 300; i++) {
     x += evalMonkey('root', map, x) / 10;
@@ -43,4 +43,4 @@ const findRoot = map => {
   return Math.round(x);
 };
 
-export default R.pipe(parseInput, toMap, findRoot);
+export default R.pipe(parseInput, toMap, whittakerMethod);
