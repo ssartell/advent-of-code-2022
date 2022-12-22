@@ -36,7 +36,7 @@ const evalMonkey = R.curry((key, map, x) => {
 });
 
 const whittakerMethod = map => {
-  let x = 1;
+  let x = 0;
   for(let i = 0; i < 300; i++) {
     x += evalMonkey('root', map, x) / 10;
   }
