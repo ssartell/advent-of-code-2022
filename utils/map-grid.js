@@ -3,6 +3,14 @@ import { add, toString, fromString } from './vec2.js';
 import { min, max } from './ramda.js';
 
 export const getPositions = grid => {
+  let positions = []
+  for(let key of grid.keys()) {
+    positions.push(fromString(key));
+  }
+  return positions;
+};
+
+export const getAllPositions = grid => {
   let bounds = getBounds(grid);
   const positions = [];
   for(let y = bounds.minY; y < bounds.maxY; y++) {
@@ -11,7 +19,7 @@ export const getPositions = grid => {
     }
   }
   return positions;
-}
+};
 
 export const getNeighbors = R.curry((grid, pos) => {
   const neighbors = [];
