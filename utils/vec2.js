@@ -36,5 +36,5 @@ export const fromString = (s) => {
 export const toArray = (v) => [v.x, v.y];
 export const fromArray = (a) => ({x: a[0], y: a[1]});
 export const fromAngle = (a) => ({x: Math.cos(a), y: Math.sin(a)});
-export const mod = (v, m) => ({x: v.x % m, y: v.y % m});
+export const mod = (v, m) => ({x: ((v.x % m.x) + m.x) % m.x, y: ((v.y % m.y) + m.y) % m.y});
 export const modVec = (v, m) => ({x: v.x % m.x, y: v.y % m.y});
